@@ -1,5 +1,4 @@
 const { test, expect } = require('../fixtures/base');
-const SignupPage = require('../pages/SignupPage');
 const { createAccountScenario } = require('../test-data/account-data');
 
 async function openAccountInformation(signupPage, scenario) {
@@ -8,16 +7,14 @@ async function openAccountInformation(signupPage, scenario) {
 }
 
 test.describe('Account Information and Address Information', () => {
-  test('TC_SIGNUP_AUTO_007: Account Information page is displayed after initial signup', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_007: Account Information page is displayed after initial signup', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
     await expect(signupPage.accountInformationHeading).toBeVisible();
   });
 
-  test('TC_SIGNUP_AUTO_008: Title Mr can be selected', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_008: Title Mr can be selected', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -25,8 +22,7 @@ test.describe('Account Information and Address Information', () => {
     await expect(signupPage.mrRadio).toBeChecked();
   });
 
-  test('TC_SIGNUP_AUTO_009: Name is required on Account Information page', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_009: Name is required on Account Information page', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -35,26 +31,23 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.accountFieldValidity('name')).toMatchObject({ valueMissing: true });
   });
 
-  test('TC_SIGNUP_AUTO_010: Initial signup email remains required and protected', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_010: Initial signup email remains required and protected', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
-    await expect(page.locator('input[data-qa="email"]')).toBeDisabled();
-    await expect(page.locator('input[data-qa="email"]')).toHaveValue(scenario.signup.email);
+    await expect(signupPage.accountEmailInput).toBeDisabled();
+    await expect(signupPage.accountEmailInput).toHaveValue(scenario.signup.email);
   });
 
-  test('TC_SIGNUP_AUTO_011: Account Information email cannot be changed to an invalid value', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_011: Account Information email cannot be changed to an invalid value', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
-    await expect(page.locator('input[data-qa="email"]')).toBeDisabled();
-    await expect(page.locator('input[data-qa="email"]')).toHaveValue(scenario.signup.email);
+    await expect(signupPage.accountEmailInput).toBeDisabled();
+    await expect(signupPage.accountEmailInput).toHaveValue(scenario.signup.email);
   });
 
-  test('TC_SIGNUP_AUTO_012: Password field masks entered value', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_012: Password field masks entered value', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -62,8 +55,7 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.isPasswordMasked()).toBe('password');
   });
 
-  test('TC_SIGNUP_AUTO_013: Password is required', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_013: Password is required', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -71,8 +63,7 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.accountFieldValidity('password')).toMatchObject({ valueMissing: true });
   });
 
-  test('TC_SIGNUP_AUTO_014: Account is created with valid mandatory information', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_014: Account is created with valid mandatory information', async ({ signupPage, page }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -81,8 +72,7 @@ test.describe('Account Information and Address Information', () => {
     await expect(page.locator('h2[data-qa="account-created"]')).toContainText('Account Created!');
   });
 
-  test('TC_SIGNUP_AUTO_015: First Name is required', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_015: First Name is required', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -91,8 +81,7 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.accountFieldValidity('first_name')).toMatchObject({ valueMissing: true });
   });
 
-  test('TC_SIGNUP_AUTO_016: Last Name is required', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_016: Last Name is required', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -101,8 +90,7 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.accountFieldValidity('last_name')).toMatchObject({ valueMissing: true });
   });
 
-  test('TC_SIGNUP_AUTO_017: Address is required', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_017: Address is required', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -111,8 +99,7 @@ test.describe('Account Information and Address Information', () => {
     await expect.poll(() => signupPage.accountFieldValidity('address')).toMatchObject({ valueMissing: true });
   });
 
-  test('TC_SIGNUP_AUTO_018: Invalid zipcode does not create an account', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_018: Invalid zipcode does not create an account', async ({ signupPage, page }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -121,8 +108,7 @@ test.describe('Account Information and Address Information', () => {
     await expect(page).toHaveURL(/\/signup$/);
   });
 
-  test('TC_SIGNUP_AUTO_019: Invalid mobile number does not create an account', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_019: Invalid mobile number does not create an account', async ({ signupPage, page }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);
@@ -131,8 +117,7 @@ test.describe('Account Information and Address Information', () => {
     await expect(page).toHaveURL(/\/signup$/);
   });
 
-  test('TC_SIGNUP_AUTO_020: Successful registration reaches the account state', async ({ page }) => {
-    const signupPage = new SignupPage(page);
+  test('TC_SIGNUP_AUTO_020: Successful registration reaches the account state', async ({ signupPage }) => {
     const scenario = createAccountScenario();
 
     await openAccountInformation(signupPage, scenario);

@@ -1,6 +1,10 @@
 const { test: base, expect } = require('@playwright/test');
+const SignupPage = require('../pages/SignupPage');
 
 const test = base.extend({
+  signupPage: async ({ page }, use) => {
+    await use(new SignupPage(page));
+  },
   page: async ({ page, baseURL }, use) => {
     await page.route('**/*', route => {
       const url = route.request().url();
