@@ -6,7 +6,10 @@ class SignupPage {
     this.nameInput = page.locator('input[data-qa="signup-name"]');
     this.emailInput = page.locator('input[data-qa="signup-email"]');
     this.signupButton = page.locator('button[data-qa="signup-button"]');
-    this.accountTitle = page.locator('h2.title.text-center');
+    this.accountNameInput = page.locator('input[data-qa="name"]');
+    this.accountEmailInput = page.locator('input[data-qa="email"]');
+    this.signupHeading = page.getByRole('heading', { name: 'New User Signup!' });
+    this.accountInformationHeading = page.getByRole('heading', { name: 'Enter Account Information' });
     this.passwordInput = page.locator('input[data-qa="password"]');
     this.daySelect = page.locator('select[data-qa="days"]');
     this.monthSelect = page.locator('select[data-qa="months"]');
@@ -25,6 +28,7 @@ class SignupPage {
     this.mobileInput = page.locator('input[data-qa="mobile_number"]');
     this.createAccountButton = page.locator('button[data-qa="create-account"]');
     this.continueButton = page.locator('a[data-qa="continue-button"]');
+    this.logoutLink = page.getByRole('link', { name: 'Logout' });
   }
 
   async openLoginPage() {
@@ -38,6 +42,25 @@ class SignupPage {
     await this.emailInput.fill(email);
     await this.signupButton.click();
     await expect(this.page).toHaveURL(/\/signup$/);
+  }
+
+  async expectSignupPageVisible(expectedHeading) {
+    await expect(this.page).toHaveURL(/\/login$/);
+    await expect(this.signupHeading).toHaveText(expectedHeading);
+  }
+
+  async submitInitialSignup(name, email) {
+    await this.nameInput.fill(name);
+    await this.emailInput.fill(email);
+    await this.signupButton.click();
+  }
+
+  async initialFieldValidity(field) {
+    return this.page.locator(`input[data-qa="signup-${field}"]`).evaluate(input => ({
+      valueMissing: input.validity.valueMissing,
+      typeMismatch: input.validity.typeMismatch,
+      validationMessage: input.validationMessage
+    }));
   }
 
   async fillAccountInformation(details) {
@@ -75,15 +98,30 @@ class SignupPage {
   }
 
   async logout() {
-    await this.page.getByRole('link', { name: 'Logout' }).click();
+    await this.logoutLink.click();
     await expect(this.page).toHaveURL(/\/login$/);
   }
 
+  async submitAccountInformation() {
+    await this.createAccountButton.click();
+  }
+
+  async accountFieldValidity(dataQa) {
+    return this.page.locator(`input[data-qa="${dataQa}"]`).evaluate(input => ({
+      valueMissing: input.validity.valueMissing,
+      typeMismatch: input.validity.typeMismatch,
+      patternMismatch: input.validity.patternMismatch,
+      validationMessage: input.validationMessage
+    }));
+  }
+
+  async isPasswordMasked() {
+    return this.passwordInput.getAttribute('type');
+  }
+
   async openSignupForExistingEmail(name, email) {
-    await this.page.goto('/login');
-    await this.nameInput.fill(name);
-    await this.emailInput.fill(email);
-    await this.signupButton.click();
+    await this.openLoginPage();
+    await this.submitInitialSignup(name, email);
     await expect(this.page.locator('body')).toContainText('Email Address already exist!');
   }
 }

@@ -3,26 +3,63 @@ const SignupPage = require('../pages/SignupPage');
 const signupData = require('../test-data/signup-data');
 
 test.describe('Automation Exercise signup flow', () => {
-  test('Create a valid account and verify duplicate email signup rejection in one flow', async ({ page }) => {
+  test('TC_SIGNUP_AUTO_001: Signup/Login page is accessible', async ({ page }) => {
     const signupPage = new SignupPage(page);
-    const { signup, account } = signupData.positive;
-    const duplicateName = 'Duplicate User';
+    await signupPage.openLoginPage();
+    await signupPage.expectSignupPageVisible(signupData.pageAccess.expectedHeading);
+  });
 
-    await test.step('Create a valid account using a unique email', async () => {
-      await signupPage.openLoginPage();
-      await signupPage.signupNewUser(signup.name, signup.email);
-      await signupPage.fillAccountInformation(account);
-      await signupPage.submitAccountCreation();
-      await signupPage.continueToHome();
-      await signupPage.logout();
+  test.describe.serial('Account creation and duplicate email flow', () => {
+    test('TC_SIGNUP_AUTO_002: Register a new user with valid Name and Email', async ({ page }) => {
+      const signupPage = new SignupPage(page);
+      const { signup, account } = signupData.validUser;
+
+      await test.step('Submit valid initial signup details', async () => {
+        await signupPage.openLoginPage();
+        await signupPage.signupNewUser(signup.name, signup.email);
+        await expect(signupPage.accountInformationHeading).toBeVisible();
+      });
+
+      await test.step('Complete account information', async () => {
+        await signupPage.fillAccountInformation(account);
+        await signupPage.submitAccountCreation();
+        await signupPage.continueToHome();
+        await signupPage.logout();
+      });
     });
 
-    await test.step('Attempt signup again using the same email to verify duplicate registration rejection', async () => {
+    test('TC_SIGNUP_AUTO_006: Duplicate email registration is rejected', async ({ page }) => {
+    const signupPage = new SignupPage(page);
+      const { signup, duplicateName } = signupData.validUser;
       await signupPage.openLoginPage();
-      await signupPage.nameInput.fill(duplicateName);
-      await signupPage.emailInput.fill(signup.email);
-      await signupPage.signupButton.click();
-      await expect(page.locator('body')).toContainText('Email Address already exist!');
+      await signupPage.openSignupForExistingEmail(duplicateName, signup.email);
     });
+  });
+
+  test('TC_SIGNUP_AUTO_003: Name is mandatory in initial signup', async ({ page }) => {
+    const signupPage = new SignupPage(page);
+    const { name, email } = signupData.requiredName;
+    await signupPage.openLoginPage();
+    await signupPage.submitInitialSignup(name, email);
+    await expect(page).toHaveURL(/\/login$/);
+    await expect.poll(() => signupPage.initialFieldValidity('name')).toMatchObject({ valueMissing: true });
+  });
+
+  test('TC_SIGNUP_AUTO_004: Email is mandatory in initial signup', async ({ page }) => {
+    const signupPage = new SignupPage(page);
+    const { name, email } = signupData.requiredEmail;
+    await signupPage.openLoginPage();
+    await signupPage.submitInitialSignup(name, email);
+    await expect(page).toHaveURL(/\/login$/);
+    await expect.poll(() => signupPage.initialFieldValidity('email')).toMatchObject({ valueMissing: true });
+  });
+
+  test('TC_SIGNUP_AUTO_005: Invalid email is rejected in initial signup', async ({ page }) => {
+    const signupPage = new SignupPage(page);
+    const { name, email } = signupData.invalidEmail;
+    await signupPage.openLoginPage();
+    await signupPage.submitInitialSignup(name, email);
+    await expect(page).toHaveURL(/\/login$/);
+    await expect.poll(() => signupPage.initialFieldValidity('email')).toMatchObject({ typeMismatch: true });
   });
 });

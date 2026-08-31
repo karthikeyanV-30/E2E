@@ -1,9 +1,24 @@
 const buildUniqueEmail = (prefix) => `${prefix}.${Date.now()}@example.com`;
 
 const signupData = {
-  positive: {
+  pageAccess: {
+    expectedHeading: 'New User Signup!'
+  },
+  requiredName: {
+    name: '',
+    email: buildUniqueEmail('missing.name')
+  },
+  requiredEmail: {
+    name: 'Karthikeyan',
+    email: ''
+  },
+  invalidEmail: {
+    name: 'Karthikeyan',
+    email: 'invalid-email'
+  },
+  validUser: {
     signup: {
-      name: 'Test User',
+      name: 'Karthikeyan',
       email: buildUniqueEmail('automation.user')
     },
     account: {
@@ -22,30 +37,8 @@ const signupData = {
       city: 'Chennai',
       zipcode: '600001',
       mobile: '9876543210'
-    }
-  },
-  negative: {
-    signup: {
-      name: 'Duplicate User',
-      email: buildUniqueEmail('duplicate.user')
     },
-    account: {
-      title: 'Mrs.',
-      password: 'Duplicate@123',
-      day: '15',
-      month: 'March',
-      year: '1992',
-      firstName: 'Duplicate',
-      lastName: 'User',
-      company: 'Duplicate Labs',
-      address: '99 Sample Road',
-      address2: 'Floor 3',
-      country: 'India',
-      state: 'Karnataka',
-      city: 'Bengaluru',
-      zipcode: '560001',
-      mobile: '9988776655'
-    }
+    duplicateName: 'Another Karthikeyan'
   }
 };
 
