@@ -7,6 +7,7 @@ module.exports = defineConfig({
 
   baseURL,
 
+  // Test timeout
   timeout: 60 * 1000,
 
   expect: {
@@ -17,9 +18,11 @@ module.exports = defineConfig({
 
   workers: 4,
 
+  // Store screenshots, videos and traces here
+  outputDir: 'test-results',
+
   reporter: [
     ['list'],
-    // ['allure-playwright'],
     ['html', {
       outputFolder: 'playwright-report',
       open: 'never'
@@ -37,10 +40,9 @@ module.exports = defineConfig({
       args: ['--start-maximized']
     },
 
+    // Failure artifacts
     screenshot: 'only-on-failure',
-
     trace: 'retain-on-failure',
-
     video: 'retain-on-failure',
 
     actionTimeout: 30 * 1000,
@@ -51,7 +53,9 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'Chromium - QA - Karthikeyan V',
-      use: { browserName: 'chromium' }
+      use: {
+        browserName: 'chromium'
+      }
     }
   ]
 });
