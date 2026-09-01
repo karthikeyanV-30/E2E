@@ -87,21 +87,3 @@ E2E/
 ├── playwright.config.js
 ├── E2E_Automation_Test_Cases.xlsx
 └── README.md
-
-## 👨‍💻 Author
-
-**Karthikeyan V**
-
-QA Engineer | Manual & Automation Testing
-
-**Automation:** Playwright | JavaScript | Selenium | Java
-
-**Testing:** Functional | Regression | API | SQL
-
-**Tools:** Git | GitHub | GitHub Actions | Postman | VS Code
-
----
-
-## 🔗 Repository
-
-[GitHub Repository](https://github.com/karthikeyanV-30/E2E)
