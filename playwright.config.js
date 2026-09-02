@@ -4,11 +4,13 @@ const baseURL = process.env.BASE_URL || 'https://www.automationexercise.com/';
 
 module.exports = defineConfig({
   testDir: './tests',
+  globalSetup: require.resolve('./global-setup'),
 
   baseURL,
 
   // Test timeout
   timeout: 60 * 1000,
+  retries: 2,
 
   expect: {
     timeout: 45 * 1000
