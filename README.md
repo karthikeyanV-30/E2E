@@ -1,4 +1,4 @@
-# 🎭 Playwright E2E Automation Framework
+# 🎭 Playwright E-commerce E2E Automation Framework
 
 ![Playwright](https://img.shields.io/badge/Playwright-1.62.1-45ba4b)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow)
